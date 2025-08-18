@@ -71,7 +71,7 @@ const prenom = document.getElementById("prenom").value;
         
     </form>
       <br>
-             <a  href="index.html">  <p>"Se connecter<< Déja avoir un compte??"</p> </a>
+             <button onclick="index.html" value="Se connecter"></button>
   </div>
 
 </body>
