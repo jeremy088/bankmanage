@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Formulaire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+   <div class="form-container">
+    <h2>Inscription</h2>
+    <form id="formulaire" method="post">
+                <div class="input-group">
+        <input name ="nom" id="nom" type="text" required/>
+        <span class="highlight"></span>
+        <label>Nom de famille</label>
+      </div>
+      
+              <div class="input-group">
+        <input name ="prenom" id="prenom" type="text" required/ >
+        <span class="highlight"></span>
+        <label>Prénom</label>
+      </div>
+      
+           <div class="input-group">
+        <input name ="email" id="email" type="email" required/>
+        <span class="highlight"></span>
+        <label>Adresse email</label>
+      </div>
+
+   
+      <div class="input-group">
+        <input id ="passwd" name="passwd"type="password" required/>
+        <span class="highlight"></span>
+        <label>Mot de passe</label>
+      </div>
+
+              <div id="input1" class="input-group">
+        <input  id="passwd1" name="passwd1"type="password"/required/ >
+        <span class="highlight"></span>
+        <label>Confirmer le mot de passe</label>
+            <span id="toggleEye" class="toggle-eye">👁</span>
+</div>
+      
+       
+
+         
+                          <button type="submit" class="btn" id="btn" >
+  <span class="text">Sinscrire</span>
+  <div class="loader"></div>
+</button>
+              
+           
+         </form>   
+        
+              
+      <div id ="resultat" ></div>
+                <div class="overlay" id="overlay">
+    <div class="popup">
+      <h2 id="popup-title"></h2>
+      <p id="popup-message"></p>
+      <button id ="popup-btn" onclick="closePopup()">OK</button>
+    </div>
+  </div>
+
+      
+          <button class="butt" id="btn1">
+  <span class="text">Se connecter</span>
+  <div class="loader"></div>
+</button>
+  </div>
+   <script>
+const btn1 = document.getElementById('btn1');
+
+  // On intercepte le clic pour gérer le loader
+  btn1.addEventListener('click', (e) => {
+    // Empêcher que l'action onclick se déclenche immédiatement
+    e.preventDefault();
+
+    if(btn1.classList.contains('loading')) return;
+
+    // Afficher le loader
+    btn1.classList.add('loading');
+   
+    // Attendre la fin de l'animation du loader (ici 2s)
+    setTimeout(() => {
+      btn1.classList.remove('loading');
+         
+         document.body.classList.add("fade-out"); 
+         setTimeout(()=>{
+           window.location.href="index.html";
+      },500);
+    }, 5000); // durée du loader
+   
+  });
+    </script>
+   <script>
+    function showPopup(titre, message) {
+      document.getElementById('popup-title').innerText = titre;
+      document.getElementById('popup-message').innerText = message;
+      document.getElementById('overlay').style.display = "flex";
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = "none";
+    }
+  </script>
+<script>
+     
+        const form = document.getElementById('formulaire');
+        const resultat = document.getElementById('resultat');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+      
+            const formData = new FormData(form);
+        
+       const  btn= document.getElementById('btn');
+         btn.classList.add('loading');     
+setTimeout(()=>{btn.classList.remove("loading");
+      setTimeout(()=>{
+           
+           setTimeout(()=>{
+                 
+            fetch('enregistrer.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                  
+                  if(data.trim()==="OK"){
+                        const btn=document.getElementById('popup-btn');
+                          btn.textContent="Se connecter";
+                         showPopup("Connexion","Compte créé avec succès , cliquer ce bouton svp!");  
+                    btn.addEventListener("click",()=>{
+                          document.body.classList.add("fade-out");
+                          window.location.href="index.html";
+                    });                    
+                  }
+                  else{
+               showPopup("Erreur",data);  }
+            })
+            .catch(error => {
+                resultat.innerHTML = "Erreur : " + error;
+            });
+          
+        });
+      },1);
+},5000);
+},5000);
+    </script>
+<script>  
+function togglepasswd1(){
+      const champ=document.getElementById("passwd1");
+      if(champ.type==="passwd"){
+            champ.type="text";
+      }else{champ.type="passwd";}
+      
+}
+</script>
+<script>
+ const input1=document.getElementById("input1");
+const togglebtn=document.getElementById("togglebtn");
+  input1.addEventListner("click",()=>{
+        togglebtn.style.display="flex";
+        document.input1.classList.add("button")  ;
+  });
+</script>
+<script>
+const champ = document.getElementById("password1");
+const toggleEye = document.getElementById("toggleEye");
+
+// Montrer l'emoji quand le champ est en focus
+champ.addEventListener("focus", () => {
+  toggleEye.style.display = "flex";
+});
+
+// Cacher l'emoji quand on sort du champ
+champ.addEventListener("blur", () => {
+  if (champ.value === "") { // tu peux choisir de le cacher seulement si vide
+    toggleEye.style.display = "none";
+  }
+});
+
+// Basculer entre 👁 et 🙈 au clic
+toggleEye.addEventListener("click", () => {
+  if (champ.type === "password") {
+    champ.type = "text";
+    toggleEye.textContent = "🙈";
+  } else {
+    champ.type = "password";
+    toggleEye.textContent = "👁";
+  }
+});
+</script>
+</body>
+</html>

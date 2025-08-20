@@ -1,0 +1,165 @@
+
+        
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Connexion</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+   <div class="form-container" id="formulaire">
+    <h2>Connexion</h2>
+    <form >
+    <div class="input-group">
+        <input id ="email" name="email"type="text" required>
+        <span class="highlight"></span>
+        <label>Adresse email</label>
+      </div>
+ 
+      <div class="input-group">
+        <input id ="passwd" name="passwd"type="password" required>
+        <span class="highlight"></span>
+        <label>Mot de passe</label>
+      </div>
+                   
+        
+      
+       </form>
+           <div class="overlay" id="overlay">
+    <div class="popup">
+      <h2 id="popup-title"></h2>
+      <p id="popup-message"></p>
+      <button  type ="button"onclick="closePopup()">OK</button>
+    </div>
+  </div>
+  
+           
+           <button type ="button"class="btn" id="btn" >
+  <span class="text">Se connecter</span>
+  <div class="loader"></div>
+</button>
+      
+      <button class="butt" id="btn1" >
+  <span class="text">Créer un compte</span>
+  <div class="loader"></div>
+</button>
+      
+              
+  </div>
+             <script>
+    function showPopup(titre, message) {
+      document.getElementById('popup-title').innerText = titre;
+      document.getElementById('popup-message').innerText = message;
+      document.getElementById('overlay').style.display = "flex";
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = "none";
+    }
+  </script>
+<script>
+function fetchacceuil() {
+    const email = document.getElementById("email").value.trim();
+    const passwd = document.getElementById("passwd").value.trim();
+    
+    // Envoyer les données au serveur
+    fetch('acceuil.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `email=${encodeURIComponent(email)}&passwd=${encodeURIComponent(passwd)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+        showPopup("Erreur",data); 
+    }) // affiche le message comme JOptionPane
+    .catch(error => showPopup("Erreur","Erreur : " + error));
+}
+</script>
+
+
+
+<script>
+function connexion() {
+    const email = document.getElementById("email").value.trim();
+    const passwd = document.getElementById("passwd").value;
+
+  /*  if(email === "" || passwd === "") {
+        //alert("❌ Veuillez remplir tous les champs !");
+        return;
+    }*/
+
+    // Envoyer les données au serveur
+    fetch('rechercher.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `email=${encodeURIComponent(email)}&passwd=${encodeURIComponent(passwd)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+        if(data.trim()==="OK"){
+            fetchacceuil();
+            document.body.classList.add("fade-out"); 
+            window.location.href="acceuil.php";
+          //  return;
+        } else{ showPopup("Erreur",data); return;
+        }
+    }) // affiche le message comme JOptionPane
+    .catch(error => showPopup("Erreur","Erreur : " + error));
+}
+</script>
+
+
+
+
+
+
+
+        <script>
+const btn = document.getElementById('btn');
+
+  btn.addEventListener('click', () => {
+    // Empêcher les clics multiples
+    if(btn.classList.contains('loading')) return;
+
+    // Ajouter la classe loading
+    btn.classList.add('loading');
+      
+    // Simuler une action (ex: requête ou traitement)
+    setTimeout(() => {
+      connexion();
+      btn.classList.remove('loading');
+    }, 5000); // durée du loader
+  });
+</script>
+<script>
+const btn1 = document.getElementById('btn1');
+
+  // On intercepte le clic pour gérer le loader
+  btn1.addEventListener('click', (e) => {
+    // Empêcher que l'action onclick se déclenche immédiatement
+    e.preventDefault();
+
+    if(btn1.classList.contains('loading')) return;
+
+    // Afficher le loader
+    btn1.classList.add('loading');
+   
+    // Attendre la fin de l'animation du loader (ici 2s)
+    setTimeout(() => {
+      btn1.classList.remove('loading');
+         
+         document.body.classList.add("fade-out"); 
+         setTimeout(()=>{
+           window.location.href="registe.php";
+      },500);
+    }, 5000); // durée du loader
+   
+  });
+    </script>
+   
+</body>
+</html>
